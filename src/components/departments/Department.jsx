@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { generateApiUrl } from '../../utils/generateApiUrl';
 
-const URL = 'http://localhost:4000/departments/';
+const URL = process.env.REACT_APP_API_URL;
 
 export function Department({ slug }) {
   // type State = 'empty' | 'data' | 'error' | 'loading'
@@ -17,10 +18,7 @@ export function Department({ slug }) {
   async function fetchDepartment() {
     setState('loading');
     try {
-      // await sleep(2)
-      const url = `${URL}${slug}`;
-      console.log(url);
-      const response = await fetch(url);
+      const response = await fetch(generateApiUrl(`/departments/${slug}`));
       if (!response.ok) {
         throw new Error('not ok');
       }

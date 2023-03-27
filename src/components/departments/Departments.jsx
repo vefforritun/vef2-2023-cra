@@ -1,16 +1,9 @@
-import { useState, useEffect } from "react";
-
-async function sleep(n) {
-  return new Promise((resolve) => {
-    window.setTimeout(() => resolve(), n * 1000)
-  })
-}
-
-const URL = 'http://localhost:4000/departments'
+import { useState, useEffect } from 'react';
+import { generateApiUrl } from '../../utils/generateApiUrl';
 
 export function Departments({ title, foo }) {
   // type State = 'empty' | 'data' | 'error' | 'loading'
-  const [state, setState] = useState('empty')
+  const [state, setState] = useState('empty');
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
@@ -21,18 +14,18 @@ export function Departments({ title, foo }) {
   }, []);
 
   async function fetchDepartments() {
-    setState('loading')
+    setState('loading');
     try {
       // await sleep(2)
-      const response = await fetch(URL);
+      const response = await fetch(generateApiUrl('/departments/'));
       if (!response.ok) {
         throw new Error('not ok');
       }
       const json = await response.json();
-      setDepartments(json)
-      setState('data')
+      setDepartments(json);
+      setState('data');
     } catch (e) {
-      setState('error')
+      setState('error');
       console.log(e);
     }
   }
@@ -40,18 +33,16 @@ export function Departments({ title, foo }) {
   return (
     <section>
       <h2>{title}</h2>
-      {state === 'empty' && (<p>engar deildir</p>)}
-      {state === 'error' && (<p>villa við að sækja deildir</p>)}
-      {state === 'loading' && (<p>Sæki deildir...</p>)}
+      {state === 'empty' && <p>engar deildir</p>}
+      {state === 'error' && <p>villa við að sækja deildir</p>}
+      {state === 'loading' && <p>Sæki deildir...</p>}
       <ul>
-        
-        {state === 'data' && departments.map((department, i) => {
-          return (
-            <li key={i}>{department.title}</li>
-          )
-        })}
+        {state === 'data' &&
+          departments.map((department, i) => {
+            return <li key={i}>{department.title}</li>;
+          })}
       </ul>
       <button onClick={() => fetchDepartments}>Sækja deildir</button>
     </section>
-  )
+  );
 }
